@@ -18,43 +18,84 @@ Respond with only the text, nothing else.
 Give this title and description in <LANGUAGE>:
 """.strip()
 
-MODEL_NAME = "meta-llama/Llama-3.1-8B-Instruct"
+BATCH_SIZE = 256
 MAX_TOKENS = 4096
 TEMPERATURE = 0.3
 REPETITION_PENALTY = 1.1
-MAX_MODEL_LEN = 8192
 GPU_MEM_UTIL = 0.95
 MAX_BATCHED_TOKENS = 16384
+
+MODELS = {
+  "A8": "CohereLabs/aya-expanse-8b",
+  "E9": "utter-project/EuroLLM-9B-Instruct",
+  "G12": "google/gemma-3-12b-it",
+  "G3": "google/gemma-3-4b-it",
+  "H3": "NousResearch/Hermes-3-Llama-3.2-3B",
+  "H8": "NousResearch/Hermes-3-Llama-3.1-8B",
+  "I8": "ibm-granite/granite-3.3-8b-instruct",
+  "L3": "meta-llama/Llama-3.2-3B-Instruct",
+  "L8": "meta-llama/Llama-3.1-8B-Instruct",
+  "M12": "mistralai/Mistral-Nemo-Instruct-2407",
+  "M8": "mistralai/Ministral-8B-Instruct-2410",
+  "Q3": "Qwen/Qwen2.5-3B-Instruct",
+  "Q7": "Qwen/Qwen2.5-7B-Instruct",
+  "S12": "VAGOsolutions/SauerkrautLM-Nemo-12b-Instruct",
+  "S8": "VAGOsolutions/Llama-3-SauerkrautLM-8b-Instruct",
+  "T7": "openGPT-X/Teuken-7B-instruct-research-v0.4",
+}
+
 
 # Read input from zip file and write output to JSONL file alongside the zip
 source_filename = sys.argv[1]
 lang = sys.argv[2]
-dest_filename = source_filename.replace('.zip', f"-{lang}.jsonl")
+model = sys.argv[3]
+dest_filename = source_filename.replace('.zip', f"-{lang}-{model}.jsonl")
+model_name = MODELS[model]
+
+if model in ('E9', 'T7'):
+  MAX_MODEL_LEN = 4096
+else:
+  MAX_MODEL_LEN = 8192
+
+if model in ('T7'):
+  supports_system_prompt = False
+else:
+  supports_system_prompt = True
 
 # Initialize vLLM engine and tokenizer
 llm = LLM(
-    model=MODEL_NAME,
+    model=model_name,
+    trust_remote_code=True,
     gpu_memory_utilization=GPU_MEM_UTIL,
     max_model_len=MAX_MODEL_LEN,
     max_num_batched_tokens=MAX_BATCHED_TOKENS,
     enable_prefix_caching=True)
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
 
 
 def generate_messages(record, language):
     prompt = LLM_PROMPT.replace('<LANGUAGE>', language) + "\n\n" + \
         record['title'] + "\n\n" + record['desc']
 
-    messages = [
-        {"role": "system", "content": LLM_SYSTEM_PROMPT},
-        {"role": "user", "content": prompt}
-    ]
+    if supports_system_prompt:
+        messages = [
+            {"role": "system", "content": LLM_SYSTEM_PROMPT},
+            {"role": "user", "content": prompt}
+        ]
+    else:
+        messages = [
+            {"role": "user", "content": LLM_SYSTEM_PROMPT + "\n\n" + prompt},
+        ]
 
     return messages
 
 
 def messages_to_token_ids(messages):
-    return tokenizer.apply_chat_template(messages, add_generation_prompt=True)
+    return tokenizer.apply_chat_template(
+	messages,
+	add_generation_prompt=True,
+	truncation=True,
+	max_length=MAX_MODEL_LEN-512)
 
 
 # Function to process a batch of records
@@ -123,13 +164,11 @@ def clean_and_combine(input):
     return input
 
 # Process input lines in batches
-batch_size = 256
-
 starttime = time.time()
 ndocs = 0
 
 with open(dest_filename, 'w') as dest_file:
-    for batch in batched(read_zip(source_filename, lang), batch_size):
+    for batch in batched(read_zip(source_filename, lang), BATCH_SIZE):
         ndocs += len(batch)
         en_records, de_records = process_batch(batch)
 
@@ -147,4 +186,6 @@ with open(dest_filename, 'w') as dest_file:
         dest_file.flush()
 
 elapsed = time.time() - starttime
-print(f"Time taken: {elapsed} seconds ({elapsed/ndocs} seconds per document), batch size {batch_size}")
+print(f"Time taken: {elapsed:.2f} seconds for {ndocs} documents, batch size {BATCH_SIZE}")
+print(f"Processing time: {elapsed/ndocs:.2f} seconds per document")
+print(f"Throughput: {ndocs/elapsed:.2f} documents per second")
