@@ -1,0 +1,98 @@
+stages:
+  # Train MLLM projects
+  train-mllm:
+    matrix:
+      lang: [en, de]
+    cmd: annif train -j 32 gnd-mllm-${item.lang} data-sets/train-${item.lang}.tsv.gz
+    deps:
+    - data-sets/train-${item.lang}.tsv.gz
+    - data/vocabs/gnd
+    params:
+    - projects.toml:
+      - gnd-mllm-${item.lang}
+    outs:
+    - data/projects/gnd-mllm-${item.lang}
+  # Train Omikuji Bonsai projects
+  train-bonsai:
+    matrix:
+      lang: [en, de]
+    cmd: annif train -j 32 gnd-bonsai-${item.lang} data-sets/train-${item.lang}.tsv.gz
+    deps:
+    - data-sets/train-${item.lang}.tsv.gz
+    - data/vocabs/gnd
+    params:
+    - projects.toml:
+      - gnd-bonsai-${item.lang}
+    outs:
+    - data/projects/gnd-bonsai-${item.lang}
+  # Train xtransformer projects
+  train-xtransformer:
+    matrix:
+      lang: [en, de]
+    cmd:
+    - annif train -j 1 gnd-xtransformer-${item.lang} data-sets/train-${item.lang}.tsv.gz
+    deps:
+    - data-sets/train-${item.lang}.tsv.gz
+    - data/vocabs/gnd
+    params:
+    - projects.toml:
+      - gnd-xtransformer-${item.lang}
+    outs:
+    - data/projects/gnd-xtransformer-${item.lang}
+  # Dummy "train" ensemble, i.e. create the datadir needed as dependency in eval
+  dummy-train-bm-ensemble:
+    matrix:
+      sources: [bm]
+      lang: [en, de]
+    cmd:
+    - mkdir -p data/projects/gnd-${item.sources}-ensemble-${item.lang}
+    - date -u > data/projects/gnd-${item.sources}-ensemble-${item.lang}/timestamp
+    deps:
+    - data/vocabs/gnd
+    - data/projects/gnd-bonsai-${item.lang}
+    - data/projects/gnd-mllm-${item.lang}
+    outs:
+    - data/projects/gnd-${item.sources}-ensemble-${item.lang}
+  dummy-train-bmx-ensemble:
+    matrix:
+      sources: [bmx]
+      lang: [en, de]
+    cmd:
+    - mkdir -p data/projects/gnd-${item.sources}-ensemble-${item.lang}
+    - date -u > data/projects/gnd-${item.sources}-ensemble-${item.lang}/timestamp
+    deps:
+    - data/vocabs/gnd
+    - data/projects/gnd-bonsai-${item.lang}
+    - data/projects/gnd-mllm-${item.lang}
+    - data/projects/gnd-xtransformer-${item.lang}
+    outs:
+    - data/projects/gnd-${item.sources}-ensemble-${item.lang}
+  # Evaluate projects
+  eval:
+    matrix:
+      backend: [mllm, bonsai, xtransformer, bm-ensemble, bmx-ensemble]
+      lang: [en, de]
+    cmd:
+    - annif eval gnd-${item.backend}-${item.lang} -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file reports/${item.backend}-${item.lang}.json data-sets/dev-${item.lang}.tsv.gz
+    deps:
+    - data-sets/dev-${item.lang}.tsv.gz
+    - data/projects/gnd-${item.backend}-${item.lang}
+    params:
+    - projects.toml:
+      - gnd-${item.backend}-${item.lang}
+    metrics:
+    - reports/${item.backend}-${item.lang}.json:
+        cache: false
+  # Optimize ensemble weights against the dev sets
+  hyperopt-ensemble:
+    matrix:
+      sources: [bm, bmx]
+      lang: [en, de]
+    cmd:
+    - annif hyperopt -j 1 --trials 200 gnd-${item.sources}-ensemble-${item.lang} data-sets/dev-${item.lang}.tsv.gz
+    deps:
+    - data-sets/dev-${item.lang}.tsv.gz
+    - data/projects/gnd-${item.sources}-ensemble-${item.lang}
+    params:
+    - projects.toml:
+      - gnd-${item.sources}-ensemble-${item.lang}

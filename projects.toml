@@ -1,0 +1,121 @@
+[gnd-mllm-en]
+name = "GND MLLM English"
+language = "en"
+backend = "mllm"
+analyzer = "simplemma(en)"
+vocab = "gnd"
+
+[gnd-mllm-de]
+name = "GND MLLM German"
+language = "de"
+backend = "mllm"
+analyzer = "snowball(german)"
+vocab = "gnd"
+
+[gnd-bonsai-en]
+name = "GND Omikuji Bonsai English"
+language = "en"
+backend = "omikuji"
+analyzer = "snowball(english)"
+vocab = "gnd"
+cluster_balanced = "False"
+cluster_k = "100"
+max_depth = "3"
+min_df = "5"
+ngram = "2"
+
+[gnd-bonsai-de]
+name = "GND Omikuji Bonsai German"
+language = "de"
+backend = "omikuji"
+analyzer = "snowball(german)"
+vocab = "gnd"
+cluster_balanced = "False"
+cluster_k = "100"
+max_depth = "3"
+min_df = "2"
+ngram = "2"
+
+[gnd-xtransformer-en]
+name="GND XTransformer English"
+language="en"
+backend="xtransformer"
+analyzer="snowball(english)"
+vocab="gnd"
+batch_size=16
+truncate_length=256
+learning_rate=0.0001
+num_train_epochs=3
+max_leaf_size=1600
+nr_splits=256
+threshold=0.015
+Cn=0.52
+Cp=5.33
+bootstrap_model="weighted-linear"
+loss_function="weighted-squared-hinge"
+max_active_matching_labels=500
+negative_sampling="tfn+man"
+warmup_steps=200
+ensemble_method="concat-only"
+post_processor="l3-hinge"
+cost_sensitive_ranker=true
+rel_mode="induce"
+rel_norm="l1"
+neg_mining_chain="tfn"
+model_shortcut="FacebookAI/xlm-roberta-base"
+
+[gnd-xtransformer-de]
+name="GND XTransformer German"
+language="de"
+backend="xtransformer"
+analyzer="snowball(german)"
+vocab="gnd"
+batch_size=16
+truncate_length=256
+learning_rate=0.0001
+num_train_epochs=3
+max_leaf_size=1600
+nr_splits=256
+threshold=0.015
+Cn=0.52
+Cp=5.33
+bootstrap_model="weighted-linear"
+loss_function="weighted-squared-hinge"
+max_active_matching_labels=500
+negative_sampling="tfn+man"
+warmup_steps=200
+ensemble_method="concat-only"
+post_processor="l3-hinge"
+cost_sensitive_ranker=true
+rel_mode="induce"
+rel_norm="l1"
+neg_mining_chain="tfn"
+model_shortcut="FacebookAI/xlm-roberta-base"
+
+[gnd-bm-ensemble-en]
+name = "GND BM ensemble English"
+language = "en"
+backend = "ensemble"
+sources = "gnd-mllm-en:0.1623,gnd-bonsai-en:0.8377"
+vocab = "gnd"
+
+[gnd-bm-ensemble-de]
+name = "GND BM ensemble German"
+language = "de"
+backend = "ensemble"
+sources = "gnd-mllm-de:0.1930,gnd-bonsai-de:0.8070"
+vocab = "gnd"
+
+[gnd-bmx-ensemble-en]
+name = "GND BMX ensemble English"
+language = "en"
+backend = "ensemble"
+sources = "gnd-mllm-en,gnd-bonsai-en,gnd-xtransformer-en"
+vocab = "gnd"
+
+[gnd-bmx-ensemble-de]
+name = "GND BMX ensemble German"
+language = "de"
+backend = "ensemble"
+sources = "gnd-mllm-de,gnd-bonsai-de,gnd-xtransformer-de"
+vocab = "gnd"
