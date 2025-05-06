@@ -29,6 +29,7 @@ MODELS = {
   "A8": "CohereLabs/aya-expanse-8b",
   "E9": "utter-project/EuroLLM-9B-Instruct",
   "G12": "google/gemma-3-12b-it",
+  "G27": "google/gemma-3-27b-it",
   "G3": "google/gemma-3-4b-it",
   "H3": "NousResearch/Hermes-3-Llama-3.2-3B",
   "H8": "NousResearch/Hermes-3-Llama-3.1-8B",
@@ -36,6 +37,7 @@ MODELS = {
   "L3": "meta-llama/Llama-3.2-3B-Instruct",
   "L8": "meta-llama/Llama-3.1-8B-Instruct",
   "M12": "mistralai/Mistral-Nemo-Instruct-2407",
+  "M24": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
   "M8": "mistralai/Ministral-8B-Instruct-2410",
   "Q3": "Qwen/Qwen2.5-3B-Instruct",
   "Q4": "Qwen/Qwen3-4B",
@@ -64,6 +66,11 @@ if model in ('T7'):
 else:
   supports_system_prompt = True
 
+if model in ('Q4', 'Q8'):
+  disable_thinking = True
+else:
+  disable_thinking = False
+
 # Initialize vLLM engine and tokenizer
 llm = LLM(
     model=model_name,
@@ -73,6 +80,12 @@ llm = LLM(
     max_num_batched_tokens=MAX_BATCHED_TOKENS,
     enable_prefix_caching=True)
 tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+
+# fix for Mistral Small: load the chat template from a JSON file because it's not in the tokenizer config
+if model == 'M24':
+    with open("mistral-small-chat-template.json", "r") as file:
+        chat_template_data = json.load(file)
+    tokenizer.chat_template = chat_template_data["chat_template"]
 
 
 def generate_messages(record, language):
@@ -93,11 +106,16 @@ def generate_messages(record, language):
 
 
 def messages_to_token_ids(messages):
+    additional_params = {}
+    if disable_thinking:
+        additional_params['enable_thinking'] = False
+
     return tokenizer.apply_chat_template(
 	messages,
 	add_generation_prompt=True,
 	truncation=True,
-	max_length=MAX_MODEL_LEN-512)
+	max_length=MAX_MODEL_LEN-512,
+        **additional_params)
 
 
 # Function to process a batch of records
