@@ -29,7 +29,7 @@ MODELS = {
   "E9": "utter-project/EuroLLM-9B-Instruct",
   "G12": "google/gemma-3-12b-it",
   "G27": "google/gemma-3-27b-it",
-  "G3": "google/gemma-3-4b-it",
+  "G4": "google/gemma-3-4b-it",
   "H3": "NousResearch/Hermes-3-Llama-3.2-3B",
   "H8": "NousResearch/Hermes-3-Llama-3.1-8B",
   "I8": "ibm-granite/granite-3.3-8b-instruct",
