@@ -22,7 +22,6 @@ BATCH_SIZE = 256
 MAX_TOKENS = 4096
 TEMPERATURE = 0.3
 REPETITION_PENALTY = 1.1
-GPU_MEM_UTIL = 0.95
 MAX_BATCHED_TOKENS = 16384
 
 MODELS = {
@@ -40,6 +39,7 @@ MODELS = {
   "M24": "mistralai/Mistral-Small-3.1-24B-Instruct-2503",
   "M8": "mistralai/Ministral-8B-Instruct-2410",
   "Q3": "Qwen/Qwen2.5-3B-Instruct",
+  "Q30": "Qwen/Qwen3-30B-A3B",
   "Q4": "Qwen/Qwen3-4B",
   "Q7": "Qwen/Qwen2.5-7B-Instruct",
   "Q8": "Qwen/Qwen3-8B",
@@ -61,12 +61,17 @@ if model in ('E9', 'T7'):
 else:
   MAX_MODEL_LEN = 8192
 
+if model in ('Q30'):
+  GPU_MEM_UTIL = 0.90  # Qwen3-30B-A3B will OOM with util set to 0.95
+else:
+  GPU_MEM_UTIL = 0.95
+
 if model in ('T7'):
   supports_system_prompt = False
 else:
   supports_system_prompt = True
 
-if model in ('Q4', 'Q8'):
+if model in ('Q4', 'Q8', 'Q30'):
   disable_thinking = True
 else:
   disable_thinking = False
