@@ -1,0 +1,648 @@
+schema: '2.0'
+stages:
+  train-bonsai@de:
+    cmd: annif train -j 32 gnd-bonsai-de data-sets/train-de.tsv.gz
+    deps:
+    - path: data-sets/train-de.tsv.gz
+      hash: md5
+      md5: 81624ebf8ae33199a80ed79cb8e376d0
+      size: 40335909
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    params:
+      projects.toml:
+        gnd-bonsai-de:
+          name: GND Omikuji Bonsai German
+          language: de
+          backend: omikuji
+          analyzer: snowball(german)
+          vocab: gnd
+          cluster_balanced: 'False'
+          cluster_k: '100'
+          max_depth: '3'
+          min_df: '2'
+          ngram: '2'
+    outs:
+    - path: data/projects/gnd-bonsai-de
+      hash: md5
+      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
+      size: 904099141
+      nfiles: 6
+  eval@bonsai-de:
+    cmd:
+    - annif eval gnd-bonsai-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bonsai-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-bonsai-de
+      hash: md5
+      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
+      size: 904099141
+      nfiles: 6
+    params:
+      projects.toml:
+        gnd-bonsai-de:
+          name: GND Omikuji Bonsai German
+          language: de
+          backend: omikuji
+          analyzer: snowball(german)
+          vocab: gnd
+          cluster_balanced: 'False'
+          cluster_k: '100'
+          max_depth: '3'
+          min_df: '2'
+          ngram: '2'
+    outs:
+    - path: reports/bonsai-de.json
+      hash: md5
+      md5: ed83e89301c041b875ce37668b26a1bf
+      size: 94
+  train-bonsai@en:
+    cmd: annif train -j 32 gnd-bonsai-en data-sets/train-en.tsv.gz
+    deps:
+    - path: data-sets/train-en.tsv.gz
+      hash: md5
+      md5: d1ffa3f2663bf15daa23eff4ef879d57
+      size: 40600923
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    params:
+      projects.toml:
+        gnd-bonsai-en:
+          name: GND Omikuji Bonsai English
+          language: en
+          backend: omikuji
+          analyzer: snowball(english)
+          vocab: gnd
+          cluster_balanced: 'False'
+          cluster_k: '100'
+          max_depth: '3'
+          min_df: '5'
+          ngram: '2'
+    outs:
+    - path: data/projects/gnd-bonsai-en
+      hash: md5
+      md5: 74cd73388c2cffa530175b65fd86cfff.dir
+      size: 779153783
+      nfiles: 6
+  eval@bonsai-en:
+    cmd:
+    - annif eval gnd-bonsai-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bonsai-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-bonsai-en
+      hash: md5
+      md5: 74cd73388c2cffa530175b65fd86cfff.dir
+      size: 779153783
+      nfiles: 6
+    params:
+      projects.toml:
+        gnd-bonsai-en:
+          name: GND Omikuji Bonsai English
+          language: en
+          backend: omikuji
+          analyzer: snowball(english)
+          vocab: gnd
+          cluster_balanced: 'False'
+          cluster_k: '100'
+          max_depth: '3'
+          min_df: '5'
+          ngram: '2'
+    outs:
+    - path: reports/bonsai-en.json
+      hash: md5
+      md5: 0bb95907dbd12c61aa82d6e7867a9d5b
+      size: 94
+  train-mllm@de:
+    cmd: annif train -j 32 gnd-mllm-de data-sets/train-de.tsv.gz
+    deps:
+    - path: data-sets/train-de.tsv.gz
+      hash: md5
+      md5: 81624ebf8ae33199a80ed79cb8e376d0
+      size: 40335909
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    params:
+      projects.toml:
+        gnd-mllm-de:
+          name: GND MLLM German
+          language: de
+          backend: mllm
+          analyzer: snowball(german)
+          vocab: gnd
+    outs:
+    - path: data/projects/gnd-mllm-de
+      hash: md5
+      md5: 405bfb7733ad55f48f3166c9f7442776.dir
+      size: 107197467
+      nfiles: 2
+  train-mllm@en:
+    cmd: annif train -j 32 gnd-mllm-en data-sets/train-en.tsv.gz
+    deps:
+    - path: data-sets/train-en.tsv.gz
+      hash: md5
+      md5: d1ffa3f2663bf15daa23eff4ef879d57
+      size: 40600923
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    params:
+      projects.toml:
+        gnd-mllm-en:
+          name: GND MLLM English
+          language: en
+          backend: mllm
+          analyzer: simplemma(en)
+          vocab: gnd
+    outs:
+    - path: data/projects/gnd-mllm-en
+      hash: md5
+      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
+      size: 148933832
+      nfiles: 2
+  eval@mllm-de:
+    cmd:
+    - annif eval gnd-mllm-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/mllm-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-mllm-de
+      hash: md5
+      md5: 405bfb7733ad55f48f3166c9f7442776.dir
+      size: 107197467
+      nfiles: 2
+    params:
+      projects.toml:
+        gnd-mllm-de:
+          name: GND MLLM German
+          language: de
+          backend: mllm
+          analyzer: snowball(german)
+          vocab: gnd
+    outs:
+    - path: reports/mllm-de.json
+      hash: md5
+      md5: c5af8571330040213ec8a59b4dbae529
+      size: 96
+  eval@mllm-en:
+    cmd:
+    - annif eval gnd-mllm-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/mllm-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-mllm-en
+      hash: md5
+      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
+      size: 148933832
+      nfiles: 2
+    params:
+      projects.toml:
+        gnd-mllm-en:
+          name: GND MLLM English
+          language: en
+          backend: mllm
+          analyzer: simplemma(en)
+          vocab: gnd
+    outs:
+    - path: reports/mllm-en.json
+      hash: md5
+      md5: e9a30cd443f175bb3edbe168770bc4c0
+      size: 95
+  dummy-train-bm-ensemble@bm-de:
+    cmd:
+    - mkdir -p data/projects/gnd-bm-ensemble-de
+    - date -u > data/projects/gnd-bm-ensemble-de/timestamp
+    deps:
+    - path: data/projects/gnd-bonsai-de
+      hash: md5
+      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
+      size: 904099141
+      nfiles: 6
+    - path: data/projects/gnd-mllm-de
+      hash: md5
+      md5: 405bfb7733ad55f48f3166c9f7442776.dir
+      size: 107197467
+      nfiles: 2
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    outs:
+    - path: data/projects/gnd-bm-ensemble-de
+      hash: md5
+      md5: 6d3ac6fb5ae967c2459ed78fb8e1c6a8.dir
+      size: 29
+      nfiles: 1
+  dummy-train-bm-ensemble@bm-en:
+    cmd:
+    - mkdir -p data/projects/gnd-bm-ensemble-en
+    - date -u > data/projects/gnd-bm-ensemble-en/timestamp
+    deps:
+    - path: data/projects/gnd-bonsai-en
+      hash: md5
+      md5: 74cd73388c2cffa530175b65fd86cfff.dir
+      size: 779153783
+      nfiles: 6
+    - path: data/projects/gnd-mllm-en
+      hash: md5
+      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
+      size: 148933832
+      nfiles: 2
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    outs:
+    - path: data/projects/gnd-bm-ensemble-en
+      hash: md5
+      md5: 974e4ce51c4251a57a3667c148a540b2.dir
+      size: 29
+      nfiles: 1
+  eval@bm-ensemble-de:
+    cmd:
+    - annif eval gnd-bm-ensemble-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bm-ensemble-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-bm-ensemble-de
+      hash: md5
+      md5: 6d3ac6fb5ae967c2459ed78fb8e1c6a8.dir
+      size: 29
+      nfiles: 1
+    params:
+      projects.toml:
+        gnd-bm-ensemble-de:
+          name: GND BM ensemble German
+          language: de
+          backend: ensemble
+          sources: gnd-mllm-de:0.1930,gnd-bonsai-de:0.8070
+          vocab: gnd
+    outs:
+    - path: reports/bm-ensemble-de.json
+      hash: md5
+      md5: c8fad3256248693edbc1a2be69f1e132
+      size: 95
+  eval@bm-ensemble-en:
+    cmd:
+    - annif eval gnd-bm-ensemble-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bm-ensemble-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-bm-ensemble-en
+      hash: md5
+      md5: 974e4ce51c4251a57a3667c148a540b2.dir
+      size: 29
+      nfiles: 1
+    params:
+      projects.toml:
+        gnd-bm-ensemble-en:
+          name: GND BM ensemble English
+          language: en
+          backend: ensemble
+          sources: gnd-mllm-en:0.1623,gnd-bonsai-en:0.8377
+          vocab: gnd
+    outs:
+    - path: reports/bm-ensemble-en.json
+      hash: md5
+      md5: de3805b99ae05365b5768b4cca37b526
+      size: 93
+  train-xtransformer@de:
+    cmd:
+    - annif train -j 1 gnd-xtransformer-de data-sets/train-de.tsv.gz
+    deps:
+    - path: data-sets/train-de.tsv.gz
+      hash: md5
+      md5: 81624ebf8ae33199a80ed79cb8e376d0
+      size: 40335909
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    params:
+      projects.toml:
+        gnd-xtransformer-de:
+          name: GND XTransformer German
+          language: de
+          backend: xtransformer
+          analyzer: snowball(german)
+          vocab: gnd
+          batch_size: 16
+          truncate_length: 256
+          learning_rate: 0.0001
+          num_train_epochs: 3
+          max_leaf_size: 1600
+          nr_splits: 256
+          threshold: 0.015
+          Cn: 0.52
+          Cp: 5.33
+          bootstrap_model: weighted-linear
+          loss_function: weighted-squared-hinge
+          max_active_matching_labels: 500
+          negative_sampling: tfn+man
+          warmup_steps: 200
+          ensemble_method: concat-only
+          post_processor: l3-hinge
+          cost_sensitive_ranker: true
+          rel_mode: induce
+          rel_norm: l1
+          neg_mining_chain: tfn
+          model_shortcut: FacebookAI/xlm-roberta-base
+    outs:
+    - path: data/projects/gnd-xtransformer-de
+      hash: md5
+      md5: f2fe1ab66544f6d80bae3e27d09c628f.dir
+      size: 1704063063
+      nfiles: 22
+  train-xtransformer@en:
+    cmd:
+    - annif train -j 1 gnd-xtransformer-en data-sets/train-en.tsv.gz
+    deps:
+    - path: data-sets/train-en.tsv.gz
+      hash: md5
+      md5: d1ffa3f2663bf15daa23eff4ef879d57
+      size: 40600923
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    params:
+      projects.toml:
+        gnd-xtransformer-en:
+          name: GND XTransformer English
+          language: en
+          backend: xtransformer
+          analyzer: snowball(english)
+          vocab: gnd
+          batch_size: 16
+          truncate_length: 256
+          learning_rate: 0.0001
+          num_train_epochs: 3
+          max_leaf_size: 1600
+          nr_splits: 256
+          threshold: 0.015
+          Cn: 0.52
+          Cp: 5.33
+          bootstrap_model: weighted-linear
+          loss_function: weighted-squared-hinge
+          max_active_matching_labels: 500
+          negative_sampling: tfn+man
+          warmup_steps: 200
+          ensemble_method: concat-only
+          post_processor: l3-hinge
+          cost_sensitive_ranker: true
+          rel_mode: induce
+          rel_norm: l1
+          neg_mining_chain: tfn
+          model_shortcut: FacebookAI/xlm-roberta-base
+    outs:
+    - path: data/projects/gnd-xtransformer-en
+      hash: md5
+      md5: 1fab07db13ce70adc14f54a182a538ca.dir
+      size: 1665065197
+      nfiles: 22
+  eval@xtransformer-en:
+    cmd:
+    - annif eval gnd-xtransformer-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/xtransformer-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-xtransformer-en
+      hash: md5
+      md5: 1fab07db13ce70adc14f54a182a538ca.dir
+      size: 1665065197
+      nfiles: 22
+    params:
+      projects.toml:
+        gnd-xtransformer-en:
+          name: GND XTransformer English
+          language: en
+          backend: xtransformer
+          analyzer: snowball(english)
+          vocab: gnd
+          batch_size: 16
+          truncate_length: 256
+          learning_rate: 0.0001
+          num_train_epochs: 3
+          max_leaf_size: 1600
+          nr_splits: 256
+          threshold: 0.015
+          Cn: 0.52
+          Cp: 5.33
+          bootstrap_model: weighted-linear
+          loss_function: weighted-squared-hinge
+          max_active_matching_labels: 500
+          negative_sampling: tfn+man
+          warmup_steps: 200
+          ensemble_method: concat-only
+          post_processor: l3-hinge
+          cost_sensitive_ranker: true
+          rel_mode: induce
+          rel_norm: l1
+          neg_mining_chain: tfn
+          model_shortcut: FacebookAI/xlm-roberta-base
+    outs:
+    - path: reports/xtransformer-en.json
+      hash: md5
+      md5: 3aa8dec69fd6c90b1fd68df58af69f94
+      size: 93
+  eval@xtransformer-de:
+    cmd:
+    - annif eval gnd-xtransformer-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/xtransformer-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-xtransformer-de
+      hash: md5
+      md5: f2fe1ab66544f6d80bae3e27d09c628f.dir
+      size: 1704063063
+      nfiles: 22
+    params:
+      projects.toml:
+        gnd-xtransformer-de:
+          name: GND XTransformer German
+          language: de
+          backend: xtransformer
+          analyzer: snowball(german)
+          vocab: gnd
+          batch_size: 16
+          truncate_length: 256
+          learning_rate: 0.0001
+          num_train_epochs: 3
+          max_leaf_size: 1600
+          nr_splits: 256
+          threshold: 0.015
+          Cn: 0.52
+          Cp: 5.33
+          bootstrap_model: weighted-linear
+          loss_function: weighted-squared-hinge
+          max_active_matching_labels: 500
+          negative_sampling: tfn+man
+          warmup_steps: 200
+          ensemble_method: concat-only
+          post_processor: l3-hinge
+          cost_sensitive_ranker: true
+          rel_mode: induce
+          rel_norm: l1
+          neg_mining_chain: tfn
+          model_shortcut: FacebookAI/xlm-roberta-base
+    outs:
+    - path: reports/xtransformer-de.json
+      hash: md5
+      md5: f8ac184ac58b54ba8215cc46f00a98fc
+      size: 94
+  dummy-train-bmx-ensemble@bmx-de:
+    cmd:
+    - mkdir -p data/projects/gnd-bmx-ensemble-de
+    - date -u > data/projects/gnd-bmx-ensemble-de/timestamp
+    deps:
+    - path: data/projects/gnd-bonsai-de
+      hash: md5
+      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
+      size: 904099141
+      nfiles: 6
+    - path: data/projects/gnd-mllm-de
+      hash: md5
+      md5: 405bfb7733ad55f48f3166c9f7442776.dir
+      size: 107197467
+      nfiles: 2
+    - path: data/projects/gnd-xtransformer-de
+      hash: md5
+      md5: f2fe1ab66544f6d80bae3e27d09c628f.dir
+      size: 1704063063
+      nfiles: 22
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    outs:
+    - path: data/projects/gnd-bmx-ensemble-de
+      hash: md5
+      md5: 19a8a33c7e71f3d8f23ba3bf3ee79727.dir
+      size: 29
+      nfiles: 1
+  dummy-train-bmx-ensemble@bmx-en:
+    cmd:
+    - mkdir -p data/projects/gnd-bmx-ensemble-en
+    - date -u > data/projects/gnd-bmx-ensemble-en/timestamp
+    deps:
+    - path: data/projects/gnd-bonsai-en
+      hash: md5
+      md5: 74cd73388c2cffa530175b65fd86cfff.dir
+      size: 779153783
+      nfiles: 6
+    - path: data/projects/gnd-mllm-en
+      hash: md5
+      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
+      size: 148933832
+      nfiles: 2
+    - path: data/projects/gnd-xtransformer-en
+      hash: md5
+      md5: 1fab07db13ce70adc14f54a182a538ca.dir
+      size: 1665065197
+      nfiles: 22
+    - path: data/vocabs/gnd
+      hash: md5
+      md5: b72a15a4a00dcaa5a542f21f4fa5f604.dir
+      size: 85563961
+      nfiles: 3
+    outs:
+    - path: data/projects/gnd-bmx-ensemble-en
+      hash: md5
+      md5: db1f81c8e5b942cbfe57984216c35158.dir
+      size: 29
+      nfiles: 1
+  eval@bmx-ensemble-de:
+    cmd:
+    - annif eval gnd-bmx-ensemble-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bmx-ensemble-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-bmx-ensemble-de
+      hash: md5
+      md5: 19a8a33c7e71f3d8f23ba3bf3ee79727.dir
+      size: 29
+      nfiles: 1
+    params:
+      projects.toml:
+        gnd-bmx-ensemble-de:
+          name: GND BMX ensemble German
+          language: de
+          backend: ensemble
+          sources: gnd-mllm-de,gnd-bonsai-de,gnd-xtransformer-de
+          vocab: gnd
+    outs:
+    - path: reports/bmx-ensemble-de.json
+      hash: md5
+      md5: 51959ab0336ac2de92aae76ca2ecdd78
+      size: 95
+  eval@bmx-ensemble-en:
+    cmd:
+    - annif eval gnd-bmx-ensemble-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bmx-ensemble-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-bmx-ensemble-en
+      hash: md5
+      md5: db1f81c8e5b942cbfe57984216c35158.dir
+      size: 29
+      nfiles: 1
+    params:
+      projects.toml:
+        gnd-bmx-ensemble-en:
+          name: GND BMX ensemble English
+          language: en
+          backend: ensemble
+          sources: gnd-mllm-en,gnd-bonsai-en,gnd-xtransformer-en
+          vocab: gnd
+    outs:
+    - path: reports/bmx-ensemble-en.json
+      hash: md5
+      md5: 0f1dadc68ce5e0111f8528b89b4950b1
+      size: 95
