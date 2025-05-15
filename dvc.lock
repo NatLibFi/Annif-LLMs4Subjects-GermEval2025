@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   train-bonsai@de:
-    cmd: annif train -j 32 gnd-bonsai-de data-sets/train-de.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-de data-sets/train-de.tsv.gz
     deps:
     - path: data-sets/train-de.tsv.gz
       hash: md5
@@ -28,8 +28,8 @@ stages:
     outs:
     - path: data/projects/gnd-bonsai-de
       hash: md5
-      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
-      size: 904099141
+      md5: 398c96901ad84e47346199a5ddce8125.dir
+      size: 898022190
       nfiles: 6
   eval@bonsai-de:
     cmd:
@@ -64,7 +64,7 @@ stages:
       md5: ed83e89301c041b875ce37668b26a1bf
       size: 94
   train-bonsai@en:
-    cmd: annif train -j 32 gnd-bonsai-en data-sets/train-en.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-en data-sets/train-en.tsv.gz
     deps:
     - path: data-sets/train-en.tsv.gz
       hash: md5
@@ -91,8 +91,8 @@ stages:
     outs:
     - path: data/projects/gnd-bonsai-en
       hash: md5
-      md5: 74cd73388c2cffa530175b65fd86cfff.dir
-      size: 779153783
+      md5: 391392b0e3a1fa391683999fd9bf49bd.dir
+      size: 778089845
       nfiles: 6
   eval@bonsai-en:
     cmd:
@@ -105,8 +105,8 @@ stages:
       size: 8995980
     - path: data/projects/gnd-bonsai-en
       hash: md5
-      md5: 74cd73388c2cffa530175b65fd86cfff.dir
-      size: 779153783
+      md5: 391392b0e3a1fa391683999fd9bf49bd.dir
+      size: 778089845
       nfiles: 6
     params:
       projects.toml:
@@ -124,10 +124,10 @@ stages:
     outs:
     - path: reports/bonsai-en.json
       hash: md5
-      md5: 0bb95907dbd12c61aa82d6e7867a9d5b
+      md5: 65342287f417dd27447be2ec3440439a
       size: 94
   train-mllm@de:
-    cmd: annif train -j 32 gnd-mllm-de data-sets/train-de.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-mllm-de data-sets/train-de.tsv.gz
     deps:
     - path: data-sets/train-de.tsv.gz
       hash: md5
@@ -146,14 +146,17 @@ stages:
           backend: mllm
           analyzer: snowball(german)
           vocab: gnd
+          min_samples_leaf: 30
+          max_leaf_nodes: 1996
+          max_samples: 0.5143
     outs:
     - path: data/projects/gnd-mllm-de
       hash: md5
-      md5: 405bfb7733ad55f48f3166c9f7442776.dir
-      size: 107197467
+      md5: 548975c7273400a4ef15c022f9a2c851.dir
+      size: 107540706
       nfiles: 2
   train-mllm@en:
-    cmd: annif train -j 32 gnd-mllm-en data-sets/train-en.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-mllm-en data-sets/train-en.tsv.gz
     deps:
     - path: data-sets/train-en.tsv.gz
       hash: md5
@@ -172,11 +175,14 @@ stages:
           backend: mllm
           analyzer: simplemma(en)
           vocab: gnd
+          min_samples_leaf: 18
+          max_leaf_nodes: 1998
+          max_samples: 0.8529
     outs:
     - path: data/projects/gnd-mllm-en
       hash: md5
-      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
-      size: 148933832
+      md5: 5b73c41ad2b6ff4b0a81cf962b233ec9.dir
+      size: 149648150
       nfiles: 2
   eval@mllm-de:
     cmd:
@@ -189,8 +195,8 @@ stages:
       size: 8929532
     - path: data/projects/gnd-mllm-de
       hash: md5
-      md5: 405bfb7733ad55f48f3166c9f7442776.dir
-      size: 107197467
+      md5: 548975c7273400a4ef15c022f9a2c851.dir
+      size: 107540706
       nfiles: 2
     params:
       projects.toml:
@@ -200,11 +206,14 @@ stages:
           backend: mllm
           analyzer: snowball(german)
           vocab: gnd
+          min_samples_leaf: 30
+          max_leaf_nodes: 1996
+          max_samples: 0.5143
     outs:
     - path: reports/mllm-de.json
       hash: md5
-      md5: c5af8571330040213ec8a59b4dbae529
-      size: 96
+      md5: 6e47e3a4c3f4b0756924be1948cad87e
+      size: 95
   eval@mllm-en:
     cmd:
     - annif eval gnd-mllm-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
@@ -216,8 +225,8 @@ stages:
       size: 8995980
     - path: data/projects/gnd-mllm-en
       hash: md5
-      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
-      size: 148933832
+      md5: 5b73c41ad2b6ff4b0a81cf962b233ec9.dir
+      size: 149648150
       nfiles: 2
     params:
       projects.toml:
@@ -227,10 +236,13 @@ stages:
           backend: mllm
           analyzer: simplemma(en)
           vocab: gnd
+          min_samples_leaf: 18
+          max_leaf_nodes: 1998
+          max_samples: 0.8529
     outs:
     - path: reports/mllm-en.json
       hash: md5
-      md5: e9a30cd443f175bb3edbe168770bc4c0
+      md5: 93ba76358b9de604e21b84b9120fc367
       size: 95
   dummy-train-bm-ensemble@bm-de:
     cmd:
@@ -537,13 +549,13 @@ stages:
     deps:
     - path: data/projects/gnd-bonsai-de
       hash: md5
-      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
-      size: 904099141
+      md5: 398c96901ad84e47346199a5ddce8125.dir
+      size: 898022190
       nfiles: 6
     - path: data/projects/gnd-mllm-de
       hash: md5
-      md5: 405bfb7733ad55f48f3166c9f7442776.dir
-      size: 107197467
+      md5: 548975c7273400a4ef15c022f9a2c851.dir
+      size: 107540706
       nfiles: 2
     - path: data/projects/gnd-xtransformer-de
       hash: md5
@@ -558,7 +570,7 @@ stages:
     outs:
     - path: data/projects/gnd-bmx-ensemble-de
       hash: md5
-      md5: 19a8a33c7e71f3d8f23ba3bf3ee79727.dir
+      md5: 1522e451be6a617b6412102436f5c26e.dir
       size: 29
       nfiles: 1
   dummy-train-bmx-ensemble@bmx-en:
@@ -568,13 +580,13 @@ stages:
     deps:
     - path: data/projects/gnd-bonsai-en
       hash: md5
-      md5: 74cd73388c2cffa530175b65fd86cfff.dir
-      size: 779153783
+      md5: 391392b0e3a1fa391683999fd9bf49bd.dir
+      size: 778089845
       nfiles: 6
     - path: data/projects/gnd-mllm-en
       hash: md5
-      md5: 2fb158d8e3cf62e0bdfb4cb5d30949e9.dir
-      size: 148933832
+      md5: 5b73c41ad2b6ff4b0a81cf962b233ec9.dir
+      size: 149648150
       nfiles: 2
     - path: data/projects/gnd-xtransformer-en
       hash: md5
@@ -589,7 +601,7 @@ stages:
     outs:
     - path: data/projects/gnd-bmx-ensemble-en
       hash: md5
-      md5: db1f81c8e5b942cbfe57984216c35158.dir
+      md5: 1297d7e99997cf24022eb724791b7bb2.dir
       size: 29
       nfiles: 1
   eval@bmx-ensemble-de:
@@ -603,7 +615,7 @@ stages:
       size: 8929532
     - path: data/projects/gnd-bmx-ensemble-de
       hash: md5
-      md5: 19a8a33c7e71f3d8f23ba3bf3ee79727.dir
+      md5: 1522e451be6a617b6412102436f5c26e.dir
       size: 29
       nfiles: 1
     params:
@@ -617,7 +629,7 @@ stages:
     outs:
     - path: reports/bmx-ensemble-de.json
       hash: md5
-      md5: 51959ab0336ac2de92aae76ca2ecdd78
+      md5: 55c8ab027cb788093cb1a9f8d8290ba5
       size: 95
   eval@bmx-ensemble-en:
     cmd:
@@ -630,7 +642,7 @@ stages:
       size: 8995980
     - path: data/projects/gnd-bmx-ensemble-en
       hash: md5
-      md5: db1f81c8e5b942cbfe57984216c35158.dir
+      md5: 1297d7e99997cf24022eb724791b7bb2.dir
       size: 29
       nfiles: 1
     params:
@@ -644,5 +656,37 @@ stages:
     outs:
     - path: reports/bmx-ensemble-en.json
       hash: md5
-      md5: 0f1dadc68ce5e0111f8528b89b4950b1
-      size: 95
+      md5: b2078f1fca2a70af158869a70cc58dc8
+      size: 94
+  hyperopt-mllm@en:
+    cmd:
+    - annif hyperopt -j 64 --trials 200 --docs-limit 2000 gnd-mllm-en data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    params:
+      projects.toml:
+        gnd-mllm-en:
+          name: GND MLLM English
+          language: en
+          backend: mllm
+          analyzer: simplemma(en)
+          vocab: gnd
+  hyperopt-mllm@de:
+    cmd:
+    - annif hyperopt -j 64 --trials 200 --docs-limit 2000 gnd-mllm-de data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    params:
+      projects.toml:
+        gnd-mllm-de:
+          name: GND MLLM German
+          language: de
+          backend: mllm
+          analyzer: snowball(german)
+          vocab: gnd

@@ -4,6 +4,9 @@ language = "en"
 backend = "mllm"
 analyzer = "simplemma(en)"
 vocab = "gnd"
+min_samples_leaf=18
+max_leaf_nodes=1998
+max_samples=0.8529
 
 [gnd-mllm-de]
 name = "GND MLLM German"
@@ -11,6 +14,9 @@ language = "de"
 backend = "mllm"
 analyzer = "snowball(german)"
 vocab = "gnd"
+min_samples_leaf=30
+max_leaf_nodes=1996
+max_samples=0.5143
 
 [gnd-bonsai-en]
 name = "GND Omikuji Bonsai English"

@@ -3,7 +3,7 @@ stages:
   train-mllm:
     matrix:
       lang: [en, de]
-    cmd: annif train -j 32 gnd-mllm-${item.lang} data-sets/train-${item.lang}.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-mllm-${item.lang} data-sets/train-${item.lang}.tsv.gz
     deps:
     - data-sets/train-${item.lang}.tsv.gz
     - data/vocabs/gnd
@@ -16,7 +16,7 @@ stages:
   train-bonsai:
     matrix:
       lang: [en, de]
-    cmd: annif train -j 32 gnd-bonsai-${item.lang} data-sets/train-${item.lang}.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-${item.lang} data-sets/train-${item.lang}.tsv.gz
     deps:
     - data-sets/train-${item.lang}.tsv.gz
     - data/vocabs/gnd
@@ -83,6 +83,17 @@ stages:
     metrics:
     - reports/${item.backend}-${item.lang}.json:
         cache: false
+  # Optimize MLLM against the dev sets
+  hyperopt-mllm:
+    matrix:
+      lang: [en, de]
+    cmd:
+    - annif hyperopt -j 64 --trials 200 --docs-limit 2000 gnd-mllm-${item.lang} data-sets/dev-${item.lang}.tsv.gz
+    deps:
+    - data-sets/dev-${item.lang}.tsv.gz
+    params:
+    - projects.toml:
+      - gnd-mllm-${item.lang}
   # Optimize ensemble weights against the dev sets
   hyperopt-ensemble:
     matrix:
