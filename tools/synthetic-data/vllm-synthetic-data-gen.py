@@ -23,7 +23,6 @@ Here is an example document title and description in <LANGUAGE> with the followi
 Generate a new document title and description in <LANGUAGE>. Respond with only the title and description, nothing else. Create a new title and description that match the following subject keywords: <NEW_KEYWORDS>
 """.strip()
 
-MODEL_NAME = "meta-llama/Llama-3.1-8B-Instruct"
 MAX_TOKENS = 4096
 TEMPERATURE = 0.5
 REPETITION_PENALTY = 1.1
