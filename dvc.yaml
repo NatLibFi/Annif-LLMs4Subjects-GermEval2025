@@ -16,9 +16,10 @@ stages:
   train-bonsai:
     matrix:
       lang: [en, de]
-    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-${item.lang} data-sets/train-${item.lang}.tsv.gz
+    cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-${item.lang} data-sets/train-${item.lang}.tsv.gz data-sets/synth-${item.lang}-1.tsv.gz
     deps:
     - data-sets/train-${item.lang}.tsv.gz
+    - data-sets/synth-${item.lang}-1.tsv.gz
     - data/vocabs/gnd
     params:
     - projects.toml:
