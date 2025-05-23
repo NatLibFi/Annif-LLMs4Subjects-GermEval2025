@@ -4,7 +4,7 @@
 #SBATCH -M ukko
 #SBATCH -p short
 #SBATCH -c 8
-#SBATCH --mem=8G
+#SBATCH --mem=16G
 #SBATCH -t2:00:00
 
 backend=$1
