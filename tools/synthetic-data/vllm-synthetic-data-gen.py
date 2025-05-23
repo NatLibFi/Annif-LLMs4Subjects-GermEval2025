@@ -124,7 +124,7 @@ def process_batch(batch, lang):
         # old subjects in example record that exist in the vocabulary
         old_subjects = [uri for uri in record['subjects'] if uri in uri_to_label]
         # new subjects: add one random subject from the vocabulary
-        new_subjects = [random.choice(list(uri_to_label.keys()))] + old_subjects
+        new_subjects = [random.choice(used_subjects)] + old_subjects
         new_record_subjects.append(new_subjects)
 
         messages = generate_messages(title_desc, lang, old_subjects, new_subjects)
@@ -164,6 +164,16 @@ def read_tsv(filename):
             subjects = [clean_uri(uri) for uri in uris.split()]
             yield {'title': title, 'desc': desc, 'subjects': subjects}
 
+# Determine the subjects used in training data
+
+used_subjects = set()
+
+for record in read_tsv(source_filename):
+    used_subjects.update(record['subjects'])
+
+used_subjects = list(used_subjects)  # random.choice() needs a list
+print(f"Selecting extra subjects from {len(used_subjects)} used subjects")
+
 # Process input lines in batches
 batch_size = 512
 
@@ -176,13 +186,9 @@ with gzip.open(dest_filename, 'wt') as dest_file:
         new_texts, new_subjects = process_batch(batch, lang)
 
         for orig_rec, new_text, new_subject in zip(batch, new_texts, new_subjects):
-            if '\n\n' not in new_text:
-                continue
-            title, desc = new_text.split('\n\n', 1)
-            title = ' '.join(title.strip().split())
-            desc = ' '.join(desc.strip().split())
+            text = ' '.join(new_text.strip().split())
             uri_string = ' '.join([f"<{uri}>" for uri in new_subject])
-            print(f"{title} ¤ {desc}\t{uri_string}", file=dest_file)
+            print(f"{text}\t{uri_string}", file=dest_file)
 
         dest_file.flush()
 
