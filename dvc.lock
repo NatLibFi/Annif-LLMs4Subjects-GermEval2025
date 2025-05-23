@@ -2,7 +2,7 @@ schema: '2.0'
 stages:
   train-bonsai@de:
     cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-de data-sets/train-de.tsv.gz data-sets/synth-de-1.tsv.gz
-      data-sets/synth-de-2.tsv.gz
+      data-sets/synth-de-2.tsv.gz data-sets/synth-de-3.tsv.gz
     deps:
     - path: data-sets/synth-de-1.tsv.gz
       hash: md5
@@ -12,6 +12,10 @@ stages:
       hash: md5
       md5: a6073d24fcddad8ffb48226aa69fe236
       size: 27784239
+    - path: data-sets/synth-de-3.tsv.gz
+      hash: md5
+      md5: 1bf3850a6d96ecf98e21f89f5a023889
+      size: 28088905
     - path: data-sets/train-de.tsv.gz
       hash: md5
       md5: 81624ebf8ae33199a80ed79cb8e376d0
@@ -37,8 +41,8 @@ stages:
     outs:
     - path: data/projects/gnd-bonsai-de
       hash: md5
-      md5: 8af223e935240ce6f18ca4312ba5bbee.dir
-      size: 2137135315
+      md5: bf7caafe345ec71b3ad36872980fe305.dir
+      size: 2854941047
       nfiles: 6
   eval@bonsai-de:
     cmd:
@@ -51,8 +55,8 @@ stages:
       size: 8929532
     - path: data/projects/gnd-bonsai-de
       hash: md5
-      md5: 8af223e935240ce6f18ca4312ba5bbee.dir
-      size: 2137135315
+      md5: bf7caafe345ec71b3ad36872980fe305.dir
+      size: 2854941047
       nfiles: 6
     params:
       projects.toml:
@@ -70,11 +74,11 @@ stages:
     outs:
     - path: reports/bonsai-de.json
       hash: md5
-      md5: 9d1a9de8cc1c5935c4f2926f58e8841b
-      size: 94
+      md5: 394ccb80047208ed711ca3fbb2ad34a3
+      size: 95
   train-bonsai@en:
     cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-en data-sets/train-en.tsv.gz data-sets/synth-en-1.tsv.gz
-      data-sets/synth-en-2.tsv.gz
+      data-sets/synth-en-2.tsv.gz data-sets/synth-en-3.tsv.gz
     deps:
     - path: data-sets/synth-en-1.tsv.gz
       hash: md5
@@ -84,6 +88,10 @@ stages:
       hash: md5
       md5: 64d52e0101bc5fbd1962be816686a939
       size: 21159270
+    - path: data-sets/synth-en-3.tsv.gz
+      hash: md5
+      md5: cb3a2733a9d39d8b89113ba16883ee3a
+      size: 22301911
     - path: data-sets/train-en.tsv.gz
       hash: md5
       md5: d1ffa3f2663bf15daa23eff4ef879d57
@@ -109,8 +117,8 @@ stages:
     outs:
     - path: data/projects/gnd-bonsai-en
       hash: md5
-      md5: 53fed256889af2d271d585c35a9e1940.dir
-      size: 2078002909
+      md5: a3c9ba85458d5ec0eb75744d6f899c5b.dir
+      size: 2760553615
       nfiles: 6
   eval@bonsai-en:
     cmd:
@@ -123,8 +131,8 @@ stages:
       size: 8995980
     - path: data/projects/gnd-bonsai-en
       hash: md5
-      md5: 53fed256889af2d271d585c35a9e1940.dir
-      size: 2078002909
+      md5: a3c9ba85458d5ec0eb75744d6f899c5b.dir
+      size: 2760553615
       nfiles: 6
     params:
       projects.toml:
@@ -142,7 +150,7 @@ stages:
     outs:
     - path: reports/bonsai-en.json
       hash: md5
-      md5: 01152e2815dd333fd115f6413d152f6e
+      md5: cea3905a71c6eea7e33115f1ba7f7de0
       size: 95
   train-mllm@de:
     cmd: annif train -j $ANNIF_EVAL_JOBS gnd-mllm-de data-sets/train-de.tsv.gz
