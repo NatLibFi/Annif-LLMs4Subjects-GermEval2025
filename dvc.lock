@@ -23,13 +23,13 @@ stages:
           cluster_balanced: 'False'
           cluster_k: '100'
           max_depth: '3'
-          min_df: '2'
+          min_df: '5'
           ngram: '2'
     outs:
     - path: data/projects/gnd-bonsai-de
       hash: md5
-      md5: 398c96901ad84e47346199a5ddce8125.dir
-      size: 898022190
+      md5: 7390e35ad26cc46f57247d30d7d2df04.dir
+      size: 780727753
       nfiles: 6
   eval@bonsai-de:
     cmd:
@@ -42,8 +42,8 @@ stages:
       size: 8929532
     - path: data/projects/gnd-bonsai-de
       hash: md5
-      md5: 7eaa0f943123b1db80c885c7adfa1b7a.dir
-      size: 904099141
+      md5: 7390e35ad26cc46f57247d30d7d2df04.dir
+      size: 780727753
       nfiles: 6
     params:
       projects.toml:
@@ -56,12 +56,12 @@ stages:
           cluster_balanced: 'False'
           cluster_k: '100'
           max_depth: '3'
-          min_df: '2'
+          min_df: '5'
           ngram: '2'
     outs:
     - path: reports/bonsai-de.json
       hash: md5
-      md5: ed83e89301c041b875ce37668b26a1bf
+      md5: cfcb2a2d86ab535a8a3cf704a02f0721
       size: 94
   train-bonsai@en:
     cmd: annif train -j $ANNIF_EVAL_JOBS gnd-bonsai-en data-sets/train-en.tsv.gz

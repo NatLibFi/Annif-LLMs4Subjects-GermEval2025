@@ -39,7 +39,7 @@ vocab = "gnd"
 cluster_balanced = "False"
 cluster_k = "100"
 max_depth = "3"
-min_df = "2"
+min_df = "5"
 ngram = "2"
 
 [gnd-xtransformer-en]
