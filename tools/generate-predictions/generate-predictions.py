@@ -1,6 +1,5 @@
 import sys
 import gzip
-import zipfile
 import json
 import collections
 from itertools import islice
@@ -9,8 +8,8 @@ import annif_client
 # read command line parameters
 port = sys.argv[1]     # TCP port where Annif REST API is available
 project = sys.argv[2]  # Annif project ID, where LANG stands for language ID
-langs = sys.argv[3]    # can be "de", "en" or "de,en"
-outfile = sys.argv[4]  # zip file where predictions are written as JSON files
+lang = sys.argv[3]     # either "de" or "en"
+outfile = sys.argv[4]  # JSONL file where predictions are written
 infiles = sys.argv[5:] # gzipped JSONL file(s) with input documents
 
 api_base = f"http://127.0.0.1:{port}/v1/"
@@ -41,24 +40,23 @@ def shorten(uri):
 
 
 def get_suggestions(batch):
-    doc_counters = collections.defaultdict(collections.Counter)
-    for lang in langs.split(','):
-        project_id = project.replace('LANG', lang)
-        documents = [{'document_id': rec['filename'], 'text': rec[f"text_{lang}"]} for rec in batch]
-        response = annif.suggest_batch(project_id, documents, limit=LIMIT)
-        for doc_results in response:
-            for result in doc_results["results"]:
-                doc_counters[doc_results['document_id']][shorten(result['uri'])] += result['score']
-    return {docid: [c[0] for c in counter.most_common(LIMIT)] for docid, counter in doc_counters.items()}
+    batch_results = collections.defaultdict(dict)
+    project_id = project.replace('LANG', lang)
+    documents = [{'document_id': rec['filename'], 'text': rec[f"text_{lang}"]} for rec in batch]
+    response = annif.suggest_batch(project_id, documents, limit=LIMIT)
+    for doc_results in response:
+        for result in doc_results["results"]:
+            batch_results[doc_results['document_id']][shorten(result['uri'])] = result['score']
+    return batch_results
 
 
-with zipfile.ZipFile(outfile, 'w') as zip:
+with open(outfile, 'w') as outf:
     for batch in batched(read_jsonl_files(infiles), BATCH_SIZE):
         batch_suggestions = get_suggestions(batch)
         for filename, suggestions in batch_suggestions.items():
-            fn = filename.replace('.jsonld', '.json')
-            data = json.dumps({"dcterms:subject": suggestions}, indent="\t")
-            zip.writestr(fn, data=data)
+            json.dump({'file': filename, 'suggestions': suggestions}, outf)
+            outf.write('\n')
+        outf.flush()
 
         # uncomment line below to test on only one batch
-        # break
+        #break
