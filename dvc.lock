@@ -396,8 +396,17 @@ stages:
       size: 93
   train-xtransformer@de:
     cmd:
-    - annif train -j 1 gnd-xtransformer-de data-sets/train-de.tsv.gz
+    - annif train -j 1 gnd-xtransformer-de data-sets/train-de.tsv.gz data-sets/synth-de-1.tsv.gz
+      data-sets/synth-de-2.tsv.gz
     deps:
+    - path: data-sets/synth-de-1.tsv.gz
+      hash: md5
+      md5: af7d7de461221ae01e84f5eec6574924
+      size: 24671106
+    - path: data-sets/synth-de-2.tsv.gz
+      hash: md5
+      md5: a6073d24fcddad8ffb48226aa69fe236
+      size: 27784239
     - path: data-sets/train-de.tsv.gz
       hash: md5
       md5: 81624ebf8ae33199a80ed79cb8e376d0
@@ -439,13 +448,22 @@ stages:
     outs:
     - path: data/projects/gnd-xtransformer-de
       hash: md5
-      md5: f2fe1ab66544f6d80bae3e27d09c628f.dir
-      size: 1704063063
+      md5: f3485b1e3e9006d073664605e64940aa.dir
+      size: 2232810191
       nfiles: 22
   train-xtransformer@en:
     cmd:
-    - annif train -j 1 gnd-xtransformer-en data-sets/train-en.tsv.gz
+    - annif train -j 1 gnd-xtransformer-en data-sets/train-en.tsv.gz data-sets/synth-en-1.tsv.gz
+      data-sets/synth-en-2.tsv.gz
     deps:
+    - path: data-sets/synth-en-1.tsv.gz
+      hash: md5
+      md5: 4045d8ca5b5f1c6885fc21575f5c3de6
+      size: 24446978
+    - path: data-sets/synth-en-2.tsv.gz
+      hash: md5
+      md5: 64d52e0101bc5fbd1962be816686a939
+      size: 21159270
     - path: data-sets/train-en.tsv.gz
       hash: md5
       md5: d1ffa3f2663bf15daa23eff4ef879d57
@@ -487,8 +505,8 @@ stages:
     outs:
     - path: data/projects/gnd-xtransformer-en
       hash: md5
-      md5: 1fab07db13ce70adc14f54a182a538ca.dir
-      size: 1665065197
+      md5: ca5e60c5d64c3d7e1474b4eb15d39154.dir
+      size: 2074576173
       nfiles: 22
   eval@xtransformer-en:
     cmd:
@@ -501,8 +519,8 @@ stages:
       size: 8995980
     - path: data/projects/gnd-xtransformer-en
       hash: md5
-      md5: 1fab07db13ce70adc14f54a182a538ca.dir
-      size: 1665065197
+      md5: ca5e60c5d64c3d7e1474b4eb15d39154.dir
+      size: 2074576173
       nfiles: 22
     params:
       projects.toml:
@@ -536,8 +554,8 @@ stages:
     outs:
     - path: reports/xtransformer-en.json
       hash: md5
-      md5: 3aa8dec69fd6c90b1fd68df58af69f94
-      size: 93
+      md5: 21cb0c21f8a63a50aef8206df3cb5c00
+      size: 95
   eval@xtransformer-de:
     cmd:
     - annif eval gnd-xtransformer-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
@@ -549,8 +567,8 @@ stages:
       size: 8929532
     - path: data/projects/gnd-xtransformer-de
       hash: md5
-      md5: f2fe1ab66544f6d80bae3e27d09c628f.dir
-      size: 1704063063
+      md5: f3485b1e3e9006d073664605e64940aa.dir
+      size: 2232810191
       nfiles: 22
     params:
       projects.toml:
@@ -584,7 +602,7 @@ stages:
     outs:
     - path: reports/xtransformer-de.json
       hash: md5
-      md5: f8ac184ac58b54ba8215cc46f00a98fc
+      md5: bc2ebe8e56bb6365eb7d7287e1893f5b
       size: 94
   dummy-train-bmx-ensemble@bmx-de:
     cmd:

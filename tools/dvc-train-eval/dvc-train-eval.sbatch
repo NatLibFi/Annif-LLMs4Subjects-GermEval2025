@@ -13,7 +13,7 @@ lang=$2
 echo "DVC train & eval. Params: $backend $lang"
 
 module purge
-module load Python/3.11.5-GCCcore-13.2.0
+module load Python/3.11.5-GCCcore-13.2.0 CUDA
 
 # activate python virtualenv with DVC and Annif
 source /wrk-vakka/group/natlibfi-annif/git/Annif/venv-turso/bin/activate
