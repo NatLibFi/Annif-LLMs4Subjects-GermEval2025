@@ -102,26 +102,26 @@ model_shortcut="FacebookAI/xlm-roberta-base"
 name = "GND BM ensemble English"
 language = "en"
 backend = "ensemble"
-sources = "gnd-mllm-en:0.1623,gnd-bonsai-en:0.8377"
+sources = "gnd-mllm-en:0.0985:0.8483,gnd-bonsai-en:0.9015:1.0342"
 vocab = "gnd"
 
 [gnd-bm-ensemble-de]
 name = "GND BM ensemble German"
 language = "de"
 backend = "ensemble"
-sources = "gnd-mllm-de:0.1930,gnd-bonsai-de:0.8070"
+sources = "gnd-mllm-de:0.1477:1.1611,gnd-bonsai-de:0.8523:1.1119"
 vocab = "gnd"
 
 [gnd-bmx-ensemble-en]
 name = "GND BMX ensemble English"
 language = "en"
 backend = "ensemble"
-sources = "gnd-mllm-en,gnd-bonsai-en,gnd-xtransformer-en"
+sources = "gnd-mllm-en:0.2403:0.8567,gnd-bonsai-en:0.4608:0.6855,gnd-xtransformer-en:0.2989:0.6290"
 vocab = "gnd"
 
 [gnd-bmx-ensemble-de]
 name = "GND BMX ensemble German"
 language = "de"
 backend = "ensemble"
-sources = "gnd-mllm-de,gnd-bonsai-de,gnd-xtransformer-de"
+sources = "gnd-mllm-de:0.1734:1.1675,gnd-bonsai-de:0.3823:1.0457,gnd-xtransformer-de:0.4443:1.0794"
 vocab = "gnd"

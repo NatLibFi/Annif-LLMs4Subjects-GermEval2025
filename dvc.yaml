@@ -80,7 +80,7 @@ stages:
       backend: [mllm, bonsai, xtransformer, bm-ensemble, bmx-ensemble]
       lang: [en, de]
     cmd:
-    - annif eval gnd-${item.backend}-${item.lang} -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file reports/${item.backend}-${item.lang}.json data-sets/dev-${item.lang}.tsv.gz
+    - annif eval gnd-${item.backend}-${item.lang} -j 16 -l 20 -m F1@5 -m NDCG --metrics-file reports/${item.backend}-${item.lang}.json data-sets/dev-${item.lang}.tsv.gz
     deps:
     - data-sets/dev-${item.lang}.tsv.gz
     - data/projects/gnd-${item.backend}-${item.lang}
@@ -107,7 +107,7 @@ stages:
       sources: [bm, bmx]
       lang: [en, de]
     cmd:
-    - annif hyperopt -j 1 --trials 200 gnd-${item.sources}-ensemble-${item.lang} data-sets/dev-${item.lang}.tsv.gz
+    - annif hyperopt -j 16 --trials 400 gnd-${item.sources}-ensemble-${item.lang} data-sets/dev-${item.lang}.tsv.gz
     deps:
     - data-sets/dev-${item.lang}.tsv.gz
     - data/projects/gnd-${item.sources}-ensemble-${item.lang}
