@@ -668,8 +668,8 @@ stages:
       nfiles: 1
   eval@bmx-ensemble-de:
     cmd:
-    - annif eval gnd-bmx-ensemble-de -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
-      reports/bmx-ensemble-de.json data-sets/dev-de.tsv.gz
+    - annif eval gnd-bmx-ensemble-de -j 1 -l 20 -m F1@5 -m NDCG --metrics-file reports/bmx-ensemble-de.json
+      data-sets/dev-de.tsv.gz
     deps:
     - path: data-sets/dev-de.tsv.gz
       hash: md5
@@ -686,17 +686,18 @@ stages:
           name: GND BMX ensemble German
           language: de
           backend: ensemble
-          sources: gnd-mllm-de,gnd-bonsai-de,gnd-xtransformer-de
+          sources: 
+            gnd-mllm-de:0.1734:1.1675,gnd-bonsai-de:0.3823:1.0457,gnd-xtransformer-de:0.4443:1.0794
           vocab: gnd
     outs:
     - path: reports/bmx-ensemble-de.json
       hash: md5
-      md5: ef5632ea5911cc81f891678f43cefc59
+      md5: bf1f3f9f4ad6feb14812a912e091dfe4
       size: 94
   eval@bmx-ensemble-en:
     cmd:
-    - annif eval gnd-bmx-ensemble-en -j $ANNIF_EVAL_JOBS -l 20 -m F1@5 -m NDCG --metrics-file
-      reports/bmx-ensemble-en.json data-sets/dev-en.tsv.gz
+    - annif eval gnd-bmx-ensemble-en -j 1 -l 20 -m F1@5 -m NDCG --metrics-file reports/bmx-ensemble-en.json
+      data-sets/dev-en.tsv.gz
     deps:
     - path: data-sets/dev-en.tsv.gz
       hash: md5
@@ -713,13 +714,14 @@ stages:
           name: GND BMX ensemble English
           language: en
           backend: ensemble
-          sources: gnd-mllm-en,gnd-bonsai-en,gnd-xtransformer-en
+          sources: 
+            gnd-mllm-en:0.2403:0.8567,gnd-bonsai-en:0.4608:0.6855,gnd-xtransformer-en:0.2989:0.6290
           vocab: gnd
     outs:
     - path: reports/bmx-ensemble-en.json
       hash: md5
-      md5: 490325740fb22b4fc704f9f8cc4241d4
-      size: 94
+      md5: 57b70eed3492cf4b182da80d25b52105
+      size: 95
   hyperopt-mllm@en:
     cmd:
     - annif hyperopt -j 64 --trials 200 --docs-limit 2000 gnd-mllm-en data-sets/dev-en.tsv.gz
