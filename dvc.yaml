@@ -77,10 +77,10 @@ stages:
   # Evaluate projects
   eval:
     matrix:
-      backend: [mllm, bonsai, xtransformer, bm-ensemble, bmx-ensemble]
+      backend: [mllm, bonsai, xtransformer, bm-ensemble, bmx-ensemble, bmx-llm_ensemble]
       lang: [en, de]
     cmd:
-    - annif eval gnd-${item.backend}-${item.lang} -j 16 -l 20 -m F1@5 -m NDCG --metrics-file reports/${item.backend}-${item.lang}.json data-sets/dev-${item.lang}.tsv.gz
+    - annif eval gnd-${item.backend}-${item.lang} -j 1 -l 20 -m F1@5 -m NDCG --metrics-file reports/${item.backend}-${item.lang}.json data-sets/dev-${item.lang}.tsv.gz
     deps:
     - data-sets/dev-${item.lang}.tsv.gz
     - data/projects/gnd-${item.backend}-${item.lang}

@@ -866,3 +866,67 @@ stages:
           backend: ensemble
           sources: gnd-mllm-en,gnd-bonsai-en,gnd-xtransformer-en
           vocab: gnd
+  eval@bmx-llm_ensemble-de:
+    cmd:
+    - annif eval gnd-bmx-llm_ensemble-de -j 1 -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bmx-llm_ensemble-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-bmx-llm_ensemble-de
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    params:
+      projects.toml:
+        gnd-bmx-llm_ensemble-de:
+          name: GND LLM-ensemble German
+          language: de
+          vocab: gnd
+          backend: llm_ensemble
+          sources: 
+            gnd-mllm-de:0.1734:1.1675,gnd-bonsai-de:0.3823:1.0457,gnd-xtransformer-de:0.4443:1.0794
+          model: Qwen/Qwen3-4B
+          sources_limit: 100
+          llm_weight: 0.092160560686234
+          llm_exponent: 9.327634939176967
+    outs:
+    - path: reports/bmx-llm_ensemble-de.json
+      hash: md5
+      md5: 2c5a4173e2d85bd224272569be061510
+      size: 92
+  eval@bmx-llm_ensemble-en:
+    cmd:
+    - annif eval gnd-bmx-llm_ensemble-en -j 1 -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bmx-llm_ensemble-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-bmx-llm_ensemble-en
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    params:
+      projects.toml:
+        gnd-bmx-llm_ensemble-en:
+          name: GND LLM-ensemble English
+          language: en
+          vocab: gnd
+          backend: llm_ensemble
+          sources: 
+            gnd-mllm-en:0.2403:0.8567,gnd-bonsai-en:0.4608:0.6855,gnd-xtransformer-en:0.2989:0.6290
+          model: Qwen/Qwen3-4B
+          sources_limit: 100
+          llm_weight: 0.15920478188242815
+          llm_exponent: 7.898256307182905
+    outs:
+    - path: reports/bmx-llm_ensemble-en.json
+      hash: md5
+      md5: e604610916f5c9c1c48c1d92fe178253
+      size: 94

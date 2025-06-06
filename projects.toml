@@ -125,3 +125,25 @@ language = "de"
 backend = "ensemble"
 sources = "gnd-mllm-de:0.1734:1.1675,gnd-bonsai-de:0.3823:1.0457,gnd-xtransformer-de:0.4443:1.0794"
 vocab = "gnd"
+
+[gnd-bmx-llm_ensemble-en]
+name = "GND LLM-ensemble English"
+language = "en"
+vocab = "gnd"
+backend = "llm_ensemble"
+sources = "gnd-mllm-en:0.2403:0.8567,gnd-bonsai-en:0.4608:0.6855,gnd-xtransformer-en:0.2989:0.6290"
+model = "Qwen/Qwen3-4B"
+sources_limit = 100
+llm_weight=0.15920478188242815
+llm_exponent=7.898256307182905
+
+[gnd-bmx-llm_ensemble-de]
+name = "GND LLM-ensemble German"
+language = "de"
+vocab = "gnd"
+backend = "llm_ensemble"
+sources = "gnd-mllm-de:0.1734:1.1675,gnd-bonsai-de:0.3823:1.0457,gnd-xtransformer-de:0.4443:1.0794"
+model = "Qwen/Qwen3-4B"
+sources_limit = 100
+llm_weight=0.092160560686234
+llm_exponent=9.327634939176967
