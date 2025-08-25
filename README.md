@@ -2,11 +2,11 @@
 
 Please see our system description preprint:
 
-_TBA_
+https://arxiv.org/abs/2508.15877
 
-See also the task description preprint:
+See also the The GermEval 2025 2nd LLMs4Subjects Shared Task Dataset:
 
-_TBA_
+https://zenodo.org/records/16743609
 
 The Annif models trained for this task are available here:
 
