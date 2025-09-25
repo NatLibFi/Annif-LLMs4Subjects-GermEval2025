@@ -932,3 +932,67 @@ stages:
       hash: md5
       md5: e604610916f5c9c1c48c1d92fe178253
       size: 94
+  eval@bmx-llm_ensemble-M24-en:
+    cmd:
+    - annif eval gnd-bmx-llm_ensemble-M24-en -j 1 -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bmx-llm_ensemble-M24-en.json data-sets/dev-en.tsv.gz
+    deps:
+    - path: data-sets/dev-en.tsv.gz
+      hash: md5
+      md5: 1030eea44ca106f48ed01a0bcf071e5f
+      size: 8995980
+    - path: data/projects/gnd-bmx-llm_ensemble-M24-en
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    params:
+      projects.toml:
+        gnd-bmx-llm_ensemble-M24-en:
+          name: GND LLM-ensemble English Mistral 24B
+          language: en
+          vocab: gnd
+          backend: llm_ensemble
+          sources: 
+            gnd-mllm-en:0.2403:0.8567,gnd-bonsai-en:0.4608:0.6855,gnd-xtransformer-en:0.2989:0.6290
+          model: mistralai/Mistral-Small-3.1-24B-Instruct-2503
+          sources_limit: 100
+          llm_weight: 0.20001490838557034
+          llm_exponent: 9.974434780018973
+    outs:
+    - path: reports/bmx-llm_ensemble-M24-en.json
+      hash: md5
+      md5: 17b2d825441eaa59a43d9c1dfa295e00
+      size: 94
+  eval@bmx-llm_ensemble-M24-de:
+    cmd:
+    - annif eval gnd-bmx-llm_ensemble-M24-de -j 1 -l 20 -m F1@5 -m NDCG --metrics-file
+      reports/bmx-llm_ensemble-M24-de.json data-sets/dev-de.tsv.gz
+    deps:
+    - path: data-sets/dev-de.tsv.gz
+      hash: md5
+      md5: d3fa135ace2243b610c04ac198bcb76f
+      size: 8929532
+    - path: data/projects/gnd-bmx-llm_ensemble-M24-de
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    params:
+      projects.toml:
+        gnd-bmx-llm_ensemble-M24-de:
+          name: GND LLM-ensemble German Mistral 24B
+          language: de
+          vocab: gnd
+          backend: llm_ensemble
+          sources: 
+            gnd-mllm-de:0.1734:1.1675,gnd-bonsai-de:0.3823:1.0457,gnd-xtransformer-de:0.4443:1.0794
+          model: mistralai/Mistral-Small-3.1-24B-Instruct-2503
+          sources_limit: 100
+          llm_weight: 0.14022014333577026
+          llm_exponent: 9.940551589689417
+    outs:
+    - path: reports/bmx-llm_ensemble-M24-de.json
+      hash: md5
+      md5: cbbe9414b0ad93bd71f86617aa8f171d
+      size: 95
