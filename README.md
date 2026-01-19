@@ -11,3 +11,7 @@ https://zenodo.org/records/16743609
 The Annif models trained for this task are available here:
 
 https://huggingface.co/NatLibFi/Annif-LLMs4Subjects-GermEval2025-data
+
+## License
+
+The content of this repository (code, scripts and data) is freely available under the [Creative Commons 1.0 Universal license](LICENSE), except for the `shared-task-datasets` directory, which contains data sets copied from the [llms4subjects](https://github.com/sciknoworg/llms4subjects) repository and licensed under the Creative Commons Attribution 4.0 International license.
